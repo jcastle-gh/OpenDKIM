@@ -432,8 +432,6 @@ dkim_test_key(DKIM_LIB *lib, char *selector, char *domain,
 			return -1;
 		}
 
-		crypto->crypto_keysize = EVP_PKEY_size(crypto->crypto_pkey);
-
 		outkey = BIO_new(BIO_s_mem());
 		if (outkey == NULL)
 		{

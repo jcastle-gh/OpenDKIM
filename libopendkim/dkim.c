@@ -1266,7 +1266,7 @@ dkim_privkey_load(DKIM *dkim)
 	}
 
 	crypto->crypto_outlen = EVP_PKEY_size(crypto->crypto_pkey);
-	crypto->crypto_keysize = crypto->crypto_outlen * 8;
+	crypto->crypto_keysize = EVP_PKEY_bits(crypto->crypto_pkey);
 
 	crypto->crypto_out = DKIM_MALLOC(dkim, crypto->crypto_outlen);
 	if (crypto->crypto_out == NULL)
@@ -5847,7 +5847,7 @@ dkim_sig_process(DKIM *dkim, DKIM_SIGINFO *sig)
 
 			EVP_MD_CTX_free(md_ctx);
 
-			crypto->crypto_keysize = EVP_PKEY_size(crypto->crypto_pkey);
+			crypto->crypto_keysize = EVP_PKEY_bits(crypto->crypto_pkey);
 		}
 		else
 # endif /* HAVE_ED25519 */
@@ -5866,7 +5866,7 @@ dkim_sig_process(DKIM *dkim, DKIM_SIGINFO *sig)
 				return DKIM_STAT_OK;
 			}
 
-			crypto->crypto_keysize = EVP_PKEY_size(crypto->crypto_pkey);
+			crypto->crypto_keysize = EVP_PKEY_bits(crypto->crypto_pkey);
 
 			crypto->crypto_in = sig->sig_sig;
 			crypto->crypto_inlen = sig->sig_siglen;
@@ -5933,7 +5933,7 @@ dkim_sig_process(DKIM *dkim, DKIM_SIGINFO *sig)
 
 		dkim_sig_load_ssl_errors(dkim, sig, 0);
 
-		sig->sig_keybits = 8 * crypto->crypto_keysize;
+		sig->sig_keybits = crypto->crypto_keysize;
 
 		BIO_CLOBBER(key);
 		EVP_CLOBBER(crypto->crypto_pkey);
